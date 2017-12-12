@@ -17,11 +17,16 @@ public class Retirement {
 		double dMonthsToWork = iYearsToWork * 12;
 		double returnVal = 0;
 		if (rAnnualReturnWorking == 0) {
-			returnVal = TotalAmountSaved()/dMonthsToWork;
-	    }else {
-	    	returnVal = TotalAmountSaved()* rAnnualReturnWorking
-	                  /(Math.pow(1+rAnnualReturnWorking, dMonthsToWork)-1);
+			
+			returnVal = TotalAmountSaved()/dMonthsToWork;	
+	    }
+		
+		else {
+			
+	    	returnVal = rAnnualReturnWorking * TotalAmountSaved()
+	                  /(Math.pow(rAnnualReturnWorking+1, dMonthsToWork)-1);
 		}
+		
 		return returnVal;
 	}
 	
@@ -88,12 +93,16 @@ public class Retirement {
 	{
 		double rAnnaulReturnRetired = dAnnualReturnRetired / 12;
 		double returnVal = 0;
-		int dMonthsRetired = iYearsRetired*12;
+		int dMonthsRetired = 12*iYearsRetired;
 		if (rAnnaulReturnRetired == 0) {
+			
 			returnVal = iYearsRetired*(dRequiredIncome - dMonthlySSI);
-		}else {
-			returnVal = (dRequiredIncome-dMonthlySSI)*((Math.pow(1+rAnnaulReturnRetired,dMonthsRetired)-1)/rAnnaulReturnRetired)
-					/Math.pow(1+rAnnaulReturnRetired, dMonthsRetired);
+		}
+		
+		else {
+			
+			returnVal = (dRequiredIncome-dMonthlySSI)*((Math.pow(rAnnaulReturnRetired+1,dMonthsRetired)-1)/rAnnaulReturnRetired)
+					/Math.pow(rAnnaulReturnRetired+1, dMonthsRetired);
 		}
 		return returnVal;
 	}

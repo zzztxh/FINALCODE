@@ -53,10 +53,10 @@ public class RetirementController implements Initializable {
 		System.out.println("Clear pressed");
 		txtRequiredIncome.clear();
 		txtAnnualReturnRetired.clear();
-		txtMonthlySSI.clear();
 		txtAnnualReturnWork.clear();
 		txtYearsRetired.clear();
 		txtYearsToWork.clear();
+		txtMonthlySSI.clear();
 		txtSaveEachMonth.setText("");
 		txtNeedToSave.setText("");
 	}
@@ -73,106 +73,165 @@ public class RetirementController implements Initializable {
 		txtSaveEachMonth.setText("$ "+String.format("%.2f",retirement.AmountToSave()));
 	}
 	
+private void format() {
+		
+		if (txtAnnualReturnWork.getText().contains("%")) {
+			
+			txtAnnualReturnWork.setText(txtAnnualReturnWork.getText().replace("%",""));
+		}
+		if (txtAnnualReturnRetired.getText().contains("%")) {
+			
+			txtAnnualReturnRetired.setText(txtAnnualReturnRetired.getText().replace("%",""));
+		}
+		if (txtRequiredIncome.getText().contains(",") || txtRequiredIncome.getText().contains("$")) {
+			
+			txtRequiredIncome.setText(txtRequiredIncome.getText().replace(",",""));
+			txtRequiredIncome.setText(txtRequiredIncome.getText().replace("$",""));
+		}
+		if (txtMonthlySSI.getText().contains(",") || txtMonthlySSI.getText().contains("$")) {
+			
+			txtMonthlySSI.setText(txtMonthlySSI.getText().replace(",",""));
+			txtMonthlySSI.setText(txtMonthlySSI.getText().replace("$",""));}
+		}
+		
 	private boolean validate(){
 		if (txtAnnualReturnWork.getText().isEmpty()) {
+			
 			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Annual Return of work can not be empty!");
+			 _alert.setContentText("Annual Return of work cannot be empty!");
 			 _alert.show();
 			 return false;
 		}
 		try {
+			
 			double workReturn = Double.parseDouble(txtAnnualReturnWork.getText());
 			if (workReturn<0||workReturn>0.2) {
+				
 				Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 				 _alert.setContentText("Annual Return of work must between 0 and 0.2!");
 				 _alert.show();
+				 
 				 return false;
 			}
 		} catch (NumberFormatException e) {
+			
 			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Annual Return of work must be a valid number!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		
 		if (txtYearsToWork.getText().isEmpty()) {
+			
 			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Years to work can not be empty!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		try {
+			
 			Integer.parseInt(txtYearsToWork.getText());
+			
 		} catch (NumberFormatException e) {
+			
 			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Years to work must be a valid integer!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		
 		if (txtYearsRetired.getText().isEmpty()) {
+			
 			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Years to retire can not be empty!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		try {
+			
 			Integer.parseInt(txtYearsRetired.getText());
+			
 		} catch (NumberFormatException e) {
+			
 			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Years to retire must be a valid integer!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		
 		if (txtAnnualReturnRetired.getText().isEmpty()) {
+			
 			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Annual Return of retire can not be empty!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		try {
+			
 			double retireReturn = Double.parseDouble(txtAnnualReturnRetired.getText());
+			
 			if (retireReturn<0||retireReturn>0.03) {
+				
 				Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 				 _alert.setContentText("Annual Return of retire must between 0 and 0.03!");
 				 _alert.show();
+				 
 				 return false;
 			}
 		} catch (NumberFormatException e) {
+			
 			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Annual Return of retire must be a valid number!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		
 		if (txtRequiredIncome.getText().isEmpty()) {
+			
 			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Required Income can not be empty!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		try {
+			
 			Double.parseDouble(txtRequiredIncome.getText());
+			
 		} catch (NumberFormatException e) {
+			
 			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Required Income must be a valid number!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		
 		if (txtMonthlySSI.getText().isEmpty()) {
+			
 			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Monthly SSI can not be empty!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		try {
+			
 			Double.parseDouble(txtMonthlySSI.getText());
+			
 		} catch (NumberFormatException e) {
+			
 			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
 			 _alert.setContentText("Monthly SSI must be a valid number!");
 			 _alert.show();
+			 
 			 return false;
 		}
 		
