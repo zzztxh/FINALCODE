@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import pkgApp.RetirementApp;
@@ -21,26 +22,35 @@ public class RetirementController implements Initializable {
 	private TextField txtYearsToWork;
 	
 	@FXML
-	private TextField txtAnnualReturnWork;
-	@FXML
 	private TextField txtYearsRetired;
+	
+	@FXML
+	private TextField txtAnnualReturnWork;
+	
+	
 	@FXML
 	private TextField txtAnnualReturnRetired;
+	
 	@FXML
 	private TextField txtRequiredIncome;
-	@FXML
-	private TextField txtMonthlySSI;
+	
 	@FXML
 	private TextField txtSaveEachMonth;
+	
 	@FXML
 	private TextField txtNeedToSave;
 	
+	@FXML
+	private TextField txtMonthlySSI;
+	
 
 	public RetirementApp getMainApp() {
+		
 		return mainApp;
 	}
 
 	public void setMainApp(RetirementApp mainApp) {
+		
 		this.mainApp = mainApp;
 	}
 
@@ -50,38 +60,45 @@ public class RetirementController implements Initializable {
 	
 	@FXML
 	public void btnClear(ActionEvent event) {
+		
 		System.out.println("Clear pressed");
+		txtYearsRetired.clear();
+		txtYearsToWork.clear();
 		txtRequiredIncome.clear();
 		txtAnnualReturnRetired.clear();
 		txtAnnualReturnWork.clear();
-		txtYearsRetired.clear();
-		txtYearsToWork.clear();
-		txtMonthlySSI.clear();
 		txtSaveEachMonth.setText("");
 		txtNeedToSave.setText("");
+		txtMonthlySSI.clear();
+		
 	}
 	
 	@FXML
 	public void btnCalculate(ActionEvent event) {
-		if (!validate()) {
-			return;
-		}
-		Retirement retirement = new Retirement(Integer.parseInt(txtYearsToWork.getText()), Double.parseDouble(txtAnnualReturnWork.getText())
-				, Integer.parseInt(txtYearsRetired.getText()), Double.parseDouble(txtAnnualReturnRetired.getText()), Double.parseDouble(txtRequiredIncome.getText())
+		this.format();
+		if (isInputValid()) {
+			
+			Retirement retirement = new Retirement(Integer.parseInt(txtYearsToWork.getText())
+				, Double.parseDouble(txtAnnualReturnWork.getText())
+				, Integer.parseInt(txtYearsRetired.getText())
+				, Double.parseDouble(txtAnnualReturnRetired.getText())
+				, Double.parseDouble(txtRequiredIncome.getText())
 				, Double.parseDouble(txtMonthlySSI.getText()));
-		txtNeedToSave.setText("$ "+String.format("%.2f",retirement.TotalAmountSaved()));
-		txtSaveEachMonth.setText("$ "+String.format("%.2f",retirement.AmountToSave()));
-	}
+		
+		txtNeedToSave.setText(Double.toString(retirement.TotalAmountSaved()));
+		
+		txtSaveEachMonth.setText(Double.toString(retirement.AmountToSave()));
+	}}
 	
-private void format() {
+	private void format() {
 		
 		if (txtAnnualReturnWork.getText().contains("%")) {
 			
-			txtAnnualReturnWork.setText(txtAnnualReturnWork.getText().replace("%",""));
+			txtAnnualReturnWork.setText(Double.toString(Double.parseDouble(txtAnnualReturnWork.getText().replace("%",""))/100));
 		}
 		if (txtAnnualReturnRetired.getText().contains("%")) {
 			
-			txtAnnualReturnRetired.setText(txtAnnualReturnRetired.getText().replace("%",""));
+			txtAnnualReturnRetired.setText(Double.toString(Double.parseDouble(txtAnnualReturnRetired.getText().replace("%",""))/100));
 		}
 		if (txtRequiredIncome.getText().contains(",") || txtRequiredIncome.getText().contains("$")) {
 			
@@ -94,39 +111,16 @@ private void format() {
 			txtMonthlySSI.setText(txtMonthlySSI.getText().replace("$",""));}
 		}
 		
-	private boolean validate(){
-		if (txtAnnualReturnWork.getText().isEmpty()) {
-			
-			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Annual Return of work cannot be empty!");
-			 _alert.show();
-			 return false;
-		}
-		try {
-			
-			double workReturn = Double.parseDouble(txtAnnualReturnWork.getText());
-			if (workReturn<0||workReturn>0.2) {
-				
-				Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-				 _alert.setContentText("Annual Return of work must between 0 and 0.2!");
-				 _alert.show();
-				 
-				 return false;
-			}
-		} catch (NumberFormatException e) {
-			
-			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Annual Return of work must be a valid number!");
-			 _alert.show();
-			 
-			 return false;
-		}
+	private boolean isInputValid(){
+		
 		
 		if (txtYearsToWork.getText().isEmpty()) {
 			
-			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Years to work can not be empty!");
-			 _alert.show();
+			 Alert alert = new Alert(AlertType.ERROR);
+			 
+			 alert.setContentText("Years to Work is empty!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
@@ -134,70 +128,130 @@ private void format() {
 			
 			Integer.parseInt(txtYearsToWork.getText());
 			
-		} catch (NumberFormatException e) {
+		} 
+		
+		catch (NumberFormatException e) {
 			
-			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Years to work must be a valid integer!");
-			 _alert.show();
+			 Alert alert = new Alert(AlertType.ERROR);
+			 
+			 alert.setContentText("Years to Work is not valid, it must be integer!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
 		
 		if (txtYearsRetired.getText().isEmpty()) {
 			
-			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Years to retire can not be empty!");
-			 _alert.show();
+			 Alert alert = new Alert(AlertType.ERROR);
+			 
+			 alert.setContentText("Years to Retire is empty!");
+			 
+			 alert.showAndWait();
+			 
+			 return false;
+		}
+		
+		try {
+			
+			Integer.parseInt(txtYearsRetired.getText());
+			
+		} 
+		
+		catch (NumberFormatException e) {
+			
+			 Alert alert = new Alert(AlertType.ERROR);
+			
+			 alert.setContentText("Years to Retire is not valid, it should be integer!");
+			 
+			 alert.showAndWait();
+			 
+			 return false;
+		}
+		
+		if (txtAnnualReturnWork.getText().isEmpty()) {
+			
+			 Alert alert = new Alert(AlertType.ERROR);
+			 
+			 alert.setContentText("Annual Return of Work is empty!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
 		try {
 			
-			Integer.parseInt(txtYearsRetired.getText());
+			double workReturn = Double.parseDouble(txtAnnualReturnWork.getText());
 			
-		} catch (NumberFormatException e) {
+			if (workReturn>0.2||workReturn<0) {
+				
+				Alert alert = new Alert(AlertType.ERROR);
+				
+				 alert.setContentText("Annual Return of Work should between 0 and 0.2!");
+				 
+				 alert.showAndWait();
+				 
+				 return false;
+			}
 			
-			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Years to retire must be a valid integer!");
-			 _alert.show();
+		} 
+		
+		catch (NumberFormatException e) {
+			
+			Alert alert = new Alert(AlertType.ERROR);
+			
+			 alert.setContentText("Annual Return of Work is not valid!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
 		
 		if (txtAnnualReturnRetired.getText().isEmpty()) {
 			
-			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Annual Return of retire can not be empty!");
-			 _alert.show();
+			 Alert alert = new Alert(AlertType.ERROR);
+			 
+			 alert.setContentText("Annual Return of Retire is empty!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
+		
 		try {
 			
 			double retireReturn = Double.parseDouble(txtAnnualReturnRetired.getText());
 			
-			if (retireReturn<0||retireReturn>0.03) {
+			if (retireReturn>0.03||retireReturn<0) {
 				
-				Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-				 _alert.setContentText("Annual Return of retire must between 0 and 0.03!");
-				 _alert.show();
+				 Alert alert = new Alert(AlertType.ERROR);
+				 
+				 alert.setContentText("Annual Return of Retire should between 0 and 0.03!");
+				 
+				 alert.showAndWait();
 				 
 				 return false;
 			}
-		} catch (NumberFormatException e) {
+		} 
+		
+		catch (NumberFormatException e) {
 			
-			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Annual Return of retire must be a valid number!");
-			 _alert.show();
+			Alert alert = new Alert(AlertType.ERROR);
+			
+			 alert.setContentText("Annual Return of Retire is not valid!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
 		
 		if (txtRequiredIncome.getText().isEmpty()) {
 			
-			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Required Income can not be empty!");
-			 _alert.show();
+			 Alert alert = new Alert(AlertType.ERROR);
+			 
+			 alert.setContentText("Required Income is empty!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
@@ -205,32 +259,43 @@ private void format() {
 			
 			Double.parseDouble(txtRequiredIncome.getText());
 			
-		} catch (NumberFormatException e) {
+		} 
+		
+		catch (NumberFormatException e) {
 			
-			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Required Income must be a valid number!");
-			 _alert.show();
+		     Alert alert = new Alert(AlertType.ERROR);
+			
+			 alert.setContentText("Required Income is not valid!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
 		
 		if (txtMonthlySSI.getText().isEmpty()) {
 			
-			 Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Monthly SSI can not be empty!");
-			 _alert.show();
+			 Alert alert = new Alert(AlertType.ERROR);
+			 
+			 alert.setContentText("Monthly SSI is empty!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
+		
 		try {
 			
 			Double.parseDouble(txtMonthlySSI.getText());
 			
-		} catch (NumberFormatException e) {
+		} 
+		
+		catch (NumberFormatException e) {
 			
-			Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-			 _alert.setContentText("Monthly SSI must be a valid number!");
-			 _alert.show();
+			 Alert alert = new Alert(AlertType.ERROR);
+			
+			 alert.setContentText("Monthly SSI is not valid!");
+			 
+			 alert.showAndWait();
 			 
 			 return false;
 		}
